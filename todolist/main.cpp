@@ -5,7 +5,11 @@
 bool does_file_exist( const std::string& filename ) {
 	std::ifstream file ( filename );
 
-	return file.is_open( );
+	bool file_exists { file.is_open( ) };
+
+	file.close( );
+
+	return file_exists;
 }
 
 void file_not_found( const std::string& filename ) {
@@ -28,12 +32,12 @@ void view_todos( const std::string& filename ) {
 				std::cout << line_count << ": " << line << std::endl; // Print out every to-do item
 				line_count++;
 			}
-
-			todo_file.close( );
 		}
 	} else {
 		file_not_found( filename );
 	}
+
+	todo_file.close( );
 
 	std::cout << std::endl;
 }
@@ -49,8 +53,6 @@ void add_todo( const std::string& filename, const std::string& todo_item ) {
 		while ( getline( todo_file, line ) ) {
 			file_data += line + "\n";
 		}
-
-		todo_file.close( );
 	} else {
 		file_not_found( filename );
 		return;
@@ -68,6 +70,8 @@ void add_todo( const std::string& filename, const std::string& todo_item ) {
 	} else {
 		file_not_found( filename );
 	}
+
+	todo_file_write.close( );
 }
 
 void remove_todo( const std::string& filename, const std::string& item_to_remove ) {
@@ -103,7 +107,6 @@ void remove_todo( const std::string& filename, const std::string& item_to_remove
 
 		file_data = file_data.substr( 0, file_data.size( ) - 1 ); // Remove the last newline character
 
-		todo_file.close( );
 
 		std::ofstream todo_file_write ( filename );
 
@@ -115,6 +118,8 @@ void remove_todo( const std::string& filename, const std::string& item_to_remove
 	} else {
 		file_not_found( filename );
 	}
+
+	todo_file.close( );
 }
 
 void mark_todo_as_done( const std::string& filename ) {
@@ -175,6 +180,8 @@ void mark_todo_as_done( const std::string& filename ) {
 	} else {
 		file_not_found( filename );
 	}
+
+	todo_file_write.close( );
 }
 
 void output_options_list( ) {
